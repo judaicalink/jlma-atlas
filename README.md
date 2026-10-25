@@ -44,6 +44,15 @@ entry `path = "atlas"`, static):
 
 The nginx location comes from the registry (`host/nginx/showcases.py` on the VM).
 
+## Title animation of web.judaicalink.org
+
+The animation on the title page of [judaicalink-site](https://github.com/judaicalink/judaicalink-site) (its script is
+`assets/js/title-animation.js` there) draws the data of the atlas. After a new build:
+
+```sh
+python3 tools/make_title_animation.py dist ../judaicalink-site/assets/data/title-animation.json
+```
+
 ## Layout
 
 | Path | What |
@@ -55,6 +64,7 @@ The nginx location comes from the registry (`host/nginx/showcases.py` on the VM)
 | `assets/atlas.js`, `assets/atlas.css` | the map, timeline, filters, panel and search in the browser |
 | `assets/basemap.json` | the base map (Natural Earth 1:50m), made by `tools/make_basemap.py` (run once) |
 | `tools/check_dist.py`, `tools/serve.py` | check a build; preview it locally |
+| `tools/make_title_animation.py` | the data of the title animation of web.judaicalink.org, from a build |
 | `docs/decisions/` | the decisions about this showcase |
 
 ## Data and credits
