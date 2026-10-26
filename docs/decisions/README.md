@@ -9,6 +9,6 @@ judaicalink-mannheim, about the data in judaicalink-data.
 | [0002](0002-places.md) | Places from the entity pages and records with coordinates; no countries or regions as points; present-day countries as areas | 2026-10-25 |
 | [0003](0003-time.md) | A life from birth to death (70 years when one end is missing, over 110 an error), events mode, organisations, publications | 2026-10-25 |
 | [0004](0004-entities-and-connections.md) | Three kinds, nested dots, connections between main places by kind, links and `?iri=` | 2026-10-25 |
-
-All: Status accepted (made autonomously 2026-10-25, to be reviewed with Kai).
 | [0005](0005-footprints.md) | Footprints: imprints at their place of printing, the places and years of their copies, their makers as connections | 2026-10-26 |
+
+0001–0004: Status accepted (made autonomously 2026-10-25, to be reviewed with Kai).
