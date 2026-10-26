@@ -39,7 +39,9 @@ USES = {
     "ep": "the entities: names, years and places of birth, death and burial",
     "gnd": "places of activity and exile, seats and years of organisations, relations between people, coordinates",
     "geonames": "coordinates", "wikidata": "GeoNames identifiers of places", "geo-coordinates": "coordinates",
-    "hhkeydocs": "coordinates", "cm-entities": "coordinates", "footprints": "coordinates",
+    "hhkeydocs": "coordinates", "cm-entities": "coordinates",
+    "footprints": "imprints: place and year of printing, the places and years of the footprints of their copies, their "
+                  "authors, editors, printers and publishers; coordinates",
     "haskala": "books: place and year of printing, editions, producers, translators and preface writers; coordinates",
     "compact-memory": "periodicals: place and years of publication",
     "epidat": "family relations of the people buried in Jewish cemeteries",
@@ -228,12 +230,15 @@ establishment or termination (from the GND). Without a year of termination an or
 of its establishment.</dd>
 <dt>Publications</dt><dd>{s['Haskala books on the map']:,} books of the <a href="/haskala/">Library of Haskala</a>
 (the place and year of printing, and of later editions) and {s['periodicals on the map']:,} periodicals of
-<a href="/compact-memory/">Compact Memory</a> (the place and the years of publication).</dd>
+<a href="/compact-memory/">Compact Memory</a> (the place and the years of publication), and
+{s['Footprints imprints on the map']:,} imprints of <a href="/footprints/">Footprints</a> (the place and year of
+printing, and {s['Footprints footprints on the map']:,} places and years where a copy was: owners, sellers, censors,
+libraries).</dd>
 <dt>Connections</dt><dd>{s['connections']:,} connections between entities on the map:
 {s['family connections']:,} family relations (GND, Epidat, Gidal Image Archive),
 {s['friendship connections']:,} acquaintances and friendships and {s['professional connections']:,} professional
 relations (GND), {s['creator connections']:,} authors, translators, printers and other producers of books (Library of
-Haskala). A line joins the main places of the two entities: for a person the first place of activity, else the place
+Haskala, Footprints). A line joins the main places of the two entities: for a person the first place of activity, else the place
 of death, burial or birth.</dd>
 <dt>Places</dt><dd>{s['places']:,} places: the entity pages of places with coordinates, and places that only an
 authority record with coordinates names. Areas are present-day countries (Natural Earth); the map shows no

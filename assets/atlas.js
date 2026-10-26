@@ -8,7 +8,7 @@
   const D = "http://data.judaicalink.org";
   const EARLIEST = -3000, NOW = 2026;
   const ROLE_LABEL = { birth: "born", activity: "active", exile: "in exile", death: "died", burial: "buried",
-    seat: "seat", printed: "printed", edition: "edition", published: "published" };
+    seat: "seat", printed: "printed", edition: "edition", published: "published", copy: "a copy there" };
   const KIND_PLURAL = ["people", "organisations", "publications"];
   const KIND_ONE = ["person", "organisation", "publication"];
   const REL_LABEL = { family: "family", friendship: "acquaintance or friendship", professional: "professional",

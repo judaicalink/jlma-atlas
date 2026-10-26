@@ -10,7 +10,7 @@ What it offers (details and reasons in [`docs/decisions/`](docs/decisions/)):
   or an organisation or publication was, sized by the number of entities.
 - **People** at their places of birth, activity, exile, death and burial for their whole life (or only births and
   deaths in their year), **organisations** at their seat, **publications** (Library of Haskala books, Compact Memory
-  periodicals) at their place of printing or publication.
+  periodicals, Footprints imprints and the places where their copies were) at their place of printing or publication.
 - **Connections**: family, acquaintance, professional relations, books and their makers, drawn between places.
 - Lists of places and entities for the selection, search by name, every entity linked to its view in the knowledge
   graph; the address keeps the state; `/atlas/?iri=<entity page IRI>` opens the map at an entity.

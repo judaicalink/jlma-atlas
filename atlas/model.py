@@ -25,6 +25,11 @@ SCHEMA = "http://schema.org/"
 GNDO = "https://d-nb.info/standards/elementset/gnd#"
 AGRELON = "https://d-nb.info/standards/elementset/agrelon#"
 HV = DATA + "haskala/vocab/"
+FPV = DATA + "footprints/vocab/"
+FP = DATA + "footprints/"
+# the roles of persons in footprints that make them makers of an imprint or its work (decision 0005)
+FP_MAKERS = {GNDO + "author", GNDO + "editor", "http://purl.org/dc/terms/publisher", FPV + "printer", FPV + "translator",
+             FPV + "compiler", FPV + "anthologizer"}
 DCT = "http://purl.org/dc/terms/"
 
 # datasets whose records state coordinates (geosparql:asWKT), for places without an entity page with coordinates
@@ -36,7 +41,7 @@ GN_FEATURE = "https://www.geonames.org/ontology#featureCode"
 
 KINDS = ["person", "organisation", "publication"]
 # the roles of a place for an entity; the order is the order of the legend and of the panels
-ROLES = ["birth", "activity", "exile", "death", "burial", "seat", "printed", "edition", "published"]
+ROLES = ["birth", "activity", "exile", "death", "burial", "seat", "printed", "edition", "published", "copy"]
 # a person's life when only one end is known, and the longest life taken as given (decision 0003)
 LIFESPAN = 70
 MAX_LIFESPAN = 110
@@ -164,6 +169,7 @@ class Atlas:
         self._organisations()
         self._haskala()
         self._periodicals()
+        self._footprints()
         self._connections()
 
     # --- coordinates of records ------------------------------------------------------------------------------------
@@ -505,6 +511,64 @@ class Atlas:
                              [[self.place_of_entity[best], "published", None]])
             self.stats["periodicals on the map"] += 1
 
+    def _footprints(self):
+        """Imprints of Footprints: the place and year of printing, and the places and years of the footprints of their
+        copies; authors, editors, printers and publishers as connections (decision 0005)."""
+        g = collections.defaultdict(lambda: collections.defaultdict(list))
+        for s, p, o in self.store.triples("footprints"):
+            if s.startswith(FP) and not s.startswith(FPV):
+                g[s][p].append(o)
+        self.footprints = g
+
+        def years(objs):
+            for o in objs:
+                if isinstance(o, Literal):
+                    m = re.match(r"\s*(\d{3}[\dxX])", o.value)
+                    if m:
+                        y = int(m.group(1).lower().replace("x", "0"))
+                        if 1000 <= y <= NOW:
+                            return y
+            return None
+
+        def place(s):
+            for o in g[s].get(FPV + "place", []):
+                i = self.place(o, label_of(g[o].get(SKOS + "prefLabel", [])))
+                if i is not None:
+                    return i
+            return None
+
+        copies = collections.defaultdict(list)
+        for s, d in g.items():
+            if s.startswith(FP + "footprint/"):
+                for c in d.get(FPV + "copy", []):
+                    for i in g[c].get(FPV + "imprint", []):
+                        copies[i].append(s)
+        self.fp_imprint_entity = {}
+        for s, d in g.items():
+            if not s.startswith(FP + "imprint/"):
+                continue
+            y, i = years(d.get(FPV + "publicationDate", [])), place(s)
+            if y is None or i is None:
+                self.stats["Footprints imprints without a year or a place with coordinates"] += 1
+                continue
+            e = self.entity(s) or s
+            self.fp_imprint_entity[s] = e
+            pres = [[i, "printed", None]]
+            for f in copies.get(s, []):
+                fy, fi = years(g[f].get(FPV + "associatedDate", [])), place(f)
+                if fy is not None and fi is not None and [fi, "copy", fy] not in pres:
+                    pres.append([fi, "copy", fy])
+                    self.stats["Footprints footprints on the map"] += 1
+            title = ""
+            if e in self.ep and self.ep[e].get(SKOS + "prefLabel"):
+                title = label_of(self.ep[e][SKOS + "prefLabel"])
+            title = title or label_of(d.get(FPV + "title", [])) or label_of(d.get(SKOS + "prefLabel", []))
+            if e in self.entities:   # an entity page that is already a publication (another dataset)
+                self.entities[e]["places"] += [x for x in pres if x not in self.entities[e]["places"]]
+            else:
+                self._new_entity(e, "publication", title, y, y, 0, pres)
+            self.stats["Footprints imprints on the map"] += 1
+
     # --- connections -----------------------------------------------------------------------------------------------
     def _connections(self):
         rel = set()
@@ -532,6 +596,14 @@ class Atlas:
             for p in ("producer", "translator", "preface_writer"):
                 for person in d.get(HV + p, []):
                     add(self.entity(person), self.haskala_book_entity[b], "creator")
+        g = self.footprints
+        for s, e in self.fp_imprint_entity.items():
+            makers = set()
+            for src in [s] + list(g[s].get(FPV + "work", [])):
+                for p in FP_MAKERS:
+                    makers |= {o for o in g[src].get(p, []) if isinstance(o, IRI)}
+            for person in sorted(makers):
+                add(self.entity(person), e, "creator")
         self.connections = sorted(rel)
         for a, b, kind in self.connections:
             self.stats[f"{kind} connections"] += 1

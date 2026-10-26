@@ -11,3 +11,4 @@ judaicalink-mannheim, about the data in judaicalink-data.
 | [0004](0004-entities-and-connections.md) | Three kinds, nested dots, connections between main places by kind, links and `?iri=` | 2026-10-25 |
 
 All: Status accepted (made autonomously 2026-10-25, to be reviewed with Kai).
+| [0005](0005-footprints.md) | Footprints: imprints at their place of printing, the places and years of their copies, their makers as connections | 2026-10-26 |
